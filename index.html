@@ -1,0 +1,850 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dessi Cuppa — Pannithadam</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bungee&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#22063f;
+    --purple:#330f63;
+    --purple-2:#481a86;
+    --yellow:#ffc93c;
+    --yellow-2:#ffdd85;
+    --magenta:#ff3e7f;
+    --lime:#c6ff4d;
+    --cream:#fbf5ff;
+    --cream-dim:#d8c8ee;
+    --radius:18px;
+    --maxw:1180px;
+    --shadow:0 18px 40px -18px rgba(15,2,35,.55);
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{margin:0;background:var(--ink);color:var(--cream);font-family:'Plus Jakarta Sans',sans-serif;-webkit-font-smoothing:antialiased;overflow-x:hidden;}
+  h1,h2,h3,.display{font-family:'Bungee',cursive;letter-spacing:.5px;line-height:1.05;text-transform:uppercase;}
+  .mono{font-family:'Space Mono',monospace;}
+  a{color:inherit;text-decoration:none;}
+  img{max-width:100%;display:block;}
+  .wrap{max-width:var(--maxw);margin:0 auto;padding:0 24px;}
+  button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit;}
+  :focus-visible{outline:3px solid var(--yellow);outline-offset:2px;border-radius:6px;}
+  ::selection{background:var(--magenta);color:#fff;}
+
+  /* ---------- background texture ---------- */
+  body::before{
+    content:"";position:fixed;inset:0;z-index:0;pointer-events:none;
+    background:
+      radial-gradient(circle at 14% 8%, rgba(255,201,60,.10), transparent 38%),
+      radial-gradient(circle at 86% 22%, rgba(255,62,127,.13), transparent 42%),
+      radial-gradient(circle at 50% 92%, rgba(198,255,77,.06), transparent 40%);
+  }
+
+  /* ---------- header ---------- */
+  header{position:sticky;top:0;z-index:60;background:rgba(34,6,63,.86);backdrop-filter:blur(10px);border-bottom:1px solid rgba(255,255,255,.08);}
+  .navbar{display:flex;align-items:center;justify-content:space-between;padding:14px 24px;max-width:var(--maxw);margin:0 auto;}
+  .brand{display:flex;align-items:center;gap:10px;font-family:'Bungee',cursive;font-size:1.05rem;color:var(--cream);}
+  .brand .dot{width:10px;height:10px;border-radius:50%;background:var(--yellow);box-shadow:0 0 0 4px rgba(255,201,60,.18);}
+  nav.links{display:flex;gap:28px;font-weight:600;font-size:.92rem;}
+  nav.links a{opacity:.85;position:relative;padding:4px 0;}
+  nav.links a:hover{opacity:1;}
+  nav.links a::after{content:"";position:absolute;left:0;bottom:-4px;width:0;height:2px;background:var(--yellow);transition:width .25s;}
+  nav.links a:hover::after{width:100%;}
+  .nav-cta{display:flex;align-items:center;gap:14px;}
+  .btn{display:inline-flex;align-items:center;gap:8px;padding:11px 20px;border-radius:999px;font-weight:700;font-size:.88rem;}
+  .btn-yellow{background:var(--yellow);color:var(--ink);}
+  .btn-yellow:hover{background:var(--yellow-2);}
+  .btn-outline{border:1.5px solid rgba(255,255,255,.35);}
+  .btn-outline:hover{border-color:var(--yellow);}
+  .icon{width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;flex:none;}
+  .burger-toggle{display:none;width:38px;height:38px;border-radius:10px;border:1px solid rgba(255,255,255,.2);align-items:center;justify-content:center;}
+
+  /* ---------- hero ---------- */
+  .hero{position:relative;padding:64px 24px 40px;max-width:var(--maxw);margin:0 auto;display:grid;grid-template-columns:1.05fr .95fr;gap:40px;align-items:center;}
+  .eyebrow{display:inline-flex;align-items:center;gap:8px;font-family:'Space Mono',monospace;font-size:.74rem;letter-spacing:.12em;color:var(--lime);background:rgba(198,255,77,.08);border:1px solid rgba(198,255,77,.35);padding:6px 14px;border-radius:999px;margin-bottom:18px;}
+  .hero h1{font-size:clamp(2.4rem,5.2vw,4.1rem);color:var(--cream);margin:0 0 18px;}
+  .hero h1 span{color:var(--yellow);}
+  .hero p.lead{font-size:1.08rem;color:var(--cream-dim);max-width:480px;margin:0 0 30px;line-height:1.55;}
+  .hero-ctas{display:flex;gap:14px;flex-wrap:wrap;margin-bottom:38px;}
+  .stat-row{display:flex;gap:28px;flex-wrap:wrap;}
+  .stat{}
+  .stat .num{font-family:'Bungee',cursive;font-size:1.5rem;color:var(--cream);display:block;}
+  .stat .lbl{font-size:.76rem;color:var(--cream-dim);text-transform:uppercase;letter-spacing:.05em;}
+
+  /* hero cup graphic */
+  .cup-stage{position:relative;display:flex;align-items:center;justify-content:center;}
+  .cup-stage svg{width:min(100%,340px);overflow:visible;}
+  .blob{position:absolute;width:340px;height:340px;background:radial-gradient(circle,rgba(255,62,127,.30),transparent 70%);filter:blur(10px);z-index:-1;}
+  @keyframes rise{0%{transform:translateY(0);opacity:.9}100%{transform:translateY(-150px);opacity:0}}
+  .bubble{animation:rise 4.5s ease-in infinite;}
+  @keyframes liquidShift{0%,100%{transform:translateY(0)}50%{transform:translateY(-3px)}}
+  .liquid{animation:liquidShift 3.4s ease-in-out infinite;}
+
+  /* ---------- marquee ---------- */
+  .marquee-strip{background:var(--yellow);color:var(--ink);transform:skewY(-1.4deg);margin:36px 0 0;overflow:hidden;border-top:3px solid var(--ink);border-bottom:3px solid var(--ink);}
+  .marquee-track{display:flex;width:max-content;animation:scrollLeft 32s linear infinite;}
+  .marquee-track span{font-family:'Bungee',cursive;font-size:.95rem;padding:14px 28px;white-space:nowrap;}
+  .marquee-track span::after{content:"•";margin-left:28px;opacity:.5;}
+  @keyframes scrollLeft{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+
+  section{position:relative;z-index:1;padding:80px 0;}
+  .section-head{text-align:center;max-width:640px;margin:0 auto 44px;}
+  .section-head .eyebrow{margin-bottom:14px;}
+  .section-head h2{font-size:clamp(1.8rem,3.6vw,2.6rem);margin:0 0 12px;}
+  .section-head p{color:var(--cream-dim);font-size:1rem;line-height:1.6;margin:0;}
+
+  /* ---------- menu ---------- */
+  #menu{padding-top:70px;}
+  .menu-toolbar{display:flex;flex-direction:column;gap:24px;margin-bottom:40px;}
+  .tabs{display:flex;gap:12px;overflow-x:auto;padding-bottom:8px;scrollbar-width:none;}
+  .tabs::-webkit-scrollbar{display:none;}
+  .tab{flex:none;display:flex;align-items:center;gap:8px;padding:12px 24px;border-radius:8px;background:transparent;border:1px solid rgba(255,255,255,.15);font-weight:600;font-size:.9rem;color:var(--cream-dim);white-space:nowrap;transition:all .2s;}
+  .tab:hover{border-color:rgba(255,255,255,.4);color:var(--cream);}
+  .tab.active{background:var(--yellow);color:var(--ink);border-color:var(--yellow);}
+  
+  .search-row{display:flex;justify-content:flex-start;}
+  .search-box{position:relative;width:100%;max-width:480px;}
+  .search-box input{width:100%;padding:14px 20px 14px 48px;border-radius:8px;border:1px solid rgba(255,255,255,.2);background:rgba(255,255,255,.03);color:var(--cream);font-size:.95rem;transition:border-color .2s, background .2s;}
+  .search-box input::placeholder{color:rgba(255,255,255,.4);}
+  .search-box input:focus{border-color:var(--yellow);background:rgba(255,255,255,.06);outline:none;}
+  .search-box .icon{position:absolute;left:18px;top:50%;transform:translateY(-50%);stroke:rgba(255,255,255,.5);width:20px;height:20px;}
+
+  .menu-group{margin-bottom:40px;}
+  .menu-group h3{font-family:'Plus Jakarta Sans',sans-serif;font-weight:700;font-size:1.25rem;color:var(--yellow);margin:0 0 20px;display:block;border-bottom:1px solid rgba(255,255,255,.1);padding-bottom:12px;letter-spacing:0.5px;}
+  
+  .grid-items{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:0 40px;}
+  
+  .item-card{background:transparent;border-bottom:1px solid rgba(255,255,255,.08);padding:16px 0;display:flex;align-items:center;justify-content:space-between;gap:12px;transition:opacity .2s;}
+  .item-card:hover{opacity:0.8;}
+  .item-card .name{font-size:.98rem;font-weight:500;color:var(--cream);}
+  .item-card .price{font-family:'Space Mono',monospace;font-weight:600;color:var(--lime);font-size:.9rem;white-space:nowrap;}
+  
+  .item-card .add{flex:none;width:32px;height:32px;border-radius:6px;background:rgba(255,255,255,.08);color:var(--cream);font-size:1.2rem;display:flex;align-items:center;justify-content:center;font-weight:300;transition:all .2s;border:1px solid rgba(255,255,255,.1);}
+  .item-card .add:hover{background:var(--yellow);color:var(--ink);border-color:var(--yellow);}
+  .item-card .right{display:flex;align-items:center;gap:16px;}
+
+  .combo-card{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.08);border-radius:12px;padding:20px;margin-bottom:16px;transition:border-color .2s;}
+  .combo-card:hover{border-color:rgba(255,255,255,.2);}
+  .combo-card .top{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;margin-bottom:10px;}
+  .combo-card .name{font-weight:700;font-size:1.05rem;color:var(--cream);}
+  .combo-card .desc{color:rgba(255,255,255,.6);font-size:.9rem;line-height:1.5;margin:0 0 16px;}
+  .combo-card .bottom{display:flex;align-items:center;justify-content:space-between;}
+  .combo-card .price{font-family:'Space Mono',monospace;color:var(--lime);font-weight:600;font-size:1rem;}
+  .combo-card .add{width:32px;height:32px;border-radius:6px;background:rgba(255,255,255,.08);color:var(--cream);font-size:1.2rem;display:flex;align-items:center;justify-content:center;font-weight:300;transition:all .2s;border:1px solid rgba(255,255,255,.1);}
+  .combo-card .add:hover{background:var(--yellow);color:var(--ink);border-color:var(--yellow);}
+
+  .addon-note{margin-top:16px;font-size:.85rem;color:rgba(255,255,255,.6);display:inline-block;padding:8px 16px;border-radius:6px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.08);}
+  .no-results{text-align:center;color:rgba(255,255,255,.6);padding:60px 0;font-size:1rem;}
+
+  /* ---------- about ---------- */
+  .feature-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:18px;}
+  .feature-card{background:var(--purple-2);border-radius:16px;padding:26px 22px;clip-path:polygon(0 0,100% 0,100% 100%,22px 100%,0 calc(100% - 22px));border:1px solid rgba(255,255,255,.08);}
+  .feature-card .icon-wrap{width:46px;height:46px;border-radius:12px;background:var(--yellow);display:flex;align-items:center;justify-content:center;margin-bottom:16px;}
+  .feature-card .icon-wrap .icon{stroke:var(--ink);}
+  .feature-card h4{font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;font-size:1.02rem;margin:0 0 8px;text-transform:none;}
+  .feature-card p{color:var(--cream-dim);font-size:.86rem;line-height:1.5;margin:0;}
+
+  /* ---------- reviews ---------- */
+  .review-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;}
+  .review-card{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:16px;padding:22px;display:flex;flex-direction:column;gap:14px;}
+  .stars{color:var(--yellow);font-size:.9rem;letter-spacing:2px;}
+  .review-card p{color:var(--cream-dim);font-size:.9rem;line-height:1.55;margin:0;flex:1;}
+  .reviewer{display:flex;align-items:center;gap:10px;}
+  .avatar{width:36px;height:36px;border-radius:50%;background:var(--magenta);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:.85rem;flex:none;}
+  .reviewer .who b{display:block;font-size:.86rem;}
+  .reviewer .who span{font-size:.74rem;color:var(--cream-dim);}
+  .rating-banner{display:flex;align-items:center;justify-content:center;gap:24px;flex-wrap:wrap;margin-bottom:40px;}
+  .rating-banner .big{font-family:'Bungee',cursive;font-size:2.6rem;color:var(--yellow);}
+
+  /* ---------- visit ---------- */
+  .visit-grid{display:grid;grid-template-columns:1fr 1fr;gap:30px;}
+  .visit-card{background:var(--purple-2);border-radius:20px;padding:30px;border:1px solid rgba(255,255,255,.08);}
+  .visit-card h3{text-transform:none;font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;font-size:1.1rem;margin:0 0 16px;}
+  .row-info{display:flex;align-items:flex-start;gap:12px;margin-bottom:16px;}
+  .row-info .icon-wrap{width:38px;height:38px;border-radius:10px;background:rgba(255,201,60,.12);display:flex;align-items:center;justify-content:center;flex:none;}
+  .row-info .icon-wrap .icon{stroke:var(--yellow);width:18px;height:18px;}
+  .row-info .txt b{display:block;font-size:.92rem;}
+  .row-info .txt span{font-size:.84rem;color:var(--cream-dim);}
+  .peak-note{background:rgba(255,62,127,.1);border:1px solid rgba(255,62,127,.3);border-radius:12px;padding:14px 16px;font-size:.85rem;color:var(--cream-dim);margin-top:6px;}
+  .social-row{display:flex;gap:10px;margin-top:20px;}
+  .social-row a{width:40px;height:40px;border-radius:50%;border:1px solid rgba(255,255,255,.2);display:flex;align-items:center;justify-content:center;}
+  .social-row a:hover{border-color:var(--yellow);background:rgba(255,201,60,.1);}
+  .visit-actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:20px;}
+
+  footer{padding:50px 0 30px;border-top:1px solid rgba(255,255,255,.08);}
+  .foot-grid{display:flex;justify-content:space-between;flex-wrap:wrap;gap:30px;margin-bottom:30px;}
+  .foot-grid .brand{margin-bottom:10px;}
+  .foot-grid p{color:var(--cream-dim);font-size:.86rem;max-width:280px;line-height:1.5;}
+  .foot-col h5{font-size:.8rem;text-transform:uppercase;letter-spacing:.08em;color:var(--cream-dim);margin:0 0 12px;}
+  .foot-col a{display:block;font-size:.88rem;color:var(--cream);opacity:.85;margin-bottom:9px;}
+  .foot-col a:hover{opacity:1;color:var(--yellow);}
+  .foot-bottom{display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px;font-size:.78rem;color:var(--cream-dim);border-top:1px solid rgba(255,255,255,.08);padding-top:20px;}
+
+  /* ---------- cart ---------- */
+  .cart-fab{position:fixed;right:22px;bottom:22px;z-index:80;background:var(--yellow);color:var(--ink);width:62px;height:62px;border-radius:50%;display:flex;align-items:center;justify-content:center;box-shadow:var(--shadow);transition:transform .2s;}
+  .cart-fab:hover{transform:scale(1.06);}
+  .cart-fab .badge{position:absolute;top:-4px;right:-4px;background:var(--magenta);color:#fff;font-size:.72rem;font-weight:800;width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;}
+  .cart-overlay{position:fixed;inset:0;background:rgba(10,2,20,.55);backdrop-filter:blur(2px);z-index:90;opacity:0;pointer-events:none;transition:opacity .25s;}
+  .cart-overlay.open{opacity:1;pointer-events:auto;}
+  .cart-drawer{position:fixed;top:0;right:0;height:100%;width:380px;max-width:92vw;background:var(--purple);z-index:91;transform:translateX(100%);transition:transform .3s cubic-bezier(.4,0,.2,1);display:flex;flex-direction:column;box-shadow:-20px 0 50px rgba(0,0,0,.4);}
+  .cart-drawer.open{transform:translateX(0);}
+  .cart-head{display:flex;align-items:center;justify-content:space-between;padding:22px;border-bottom:1px dashed rgba(255,255,255,.15);}
+  .cart-head h3{margin:0;font-size:1.1rem;text-transform:none;font-family:'Plus Jakarta Sans',sans-serif;}
+  .cart-close{width:34px;height:34px;border-radius:50%;background:rgba(255,255,255,.08);display:flex;align-items:center;justify-content:center;}
+  .cart-body{flex:1;overflow-y:auto;padding:16px 22px;}
+  .cart-row{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:12px 0;border-bottom:1px solid rgba(255,255,255,.07);}
+  .cart-row .nm{font-size:.88rem;font-weight:600;}
+  .cart-row .pr{font-family:'Space Mono',monospace;font-size:.8rem;color:var(--cream-dim);}
+  .qty-ctrl{display:flex;align-items:center;gap:8px;}
+  .qty-ctrl button{width:24px;height:24px;border-radius:50%;background:rgba(255,255,255,.1);font-weight:700;}
+  .qty-ctrl button:hover{background:var(--yellow);color:var(--ink);}
+  .cart-empty{text-align:center;color:var(--cream-dim);padding:60px 10px;font-size:.9rem;}
+  .cart-foot{padding:20px 22px;border-top:1px dashed rgba(255,255,255,.15);}
+  .cart-total{display:flex;justify-content:space-between;font-family:'Space Mono',monospace;font-weight:700;margin-bottom:16px;font-size:1.05rem;}
+  .cart-foot .btn{width:100%;justify-content:center;margin-bottom:10px;}
+  .clear-link{display:block;text-align:center;font-size:.8rem;color:var(--cream-dim);margin-top:8px;}
+  .clear-link:hover{color:var(--magenta);}
+
+  .fade-up{opacity:0;transform:translateY(18px);transition:opacity .6s ease,transform .6s ease;}
+  .fade-up.in{opacity:1;transform:translateY(0);}
+
+  @media(prefers-reduced-motion:reduce){
+    *{animation:none !important;transition:none !important;}
+  }
+
+  @media(max-width:980px){
+    .hero{grid-template-columns:1fr;text-align:center;padding-top:40px;}
+    .hero p.lead{margin-inline:auto;}
+    .hero-ctas{justify-content:center;}
+    .stat-row{justify-content:center;}
+    .cup-stage{order:-1;margin-bottom:10px;}
+    .feature-grid{grid-template-columns:repeat(2,1fr);}
+    .review-grid{grid-template-columns:1fr;}
+    .visit-grid{grid-template-columns:1fr;}
+    .grid-items{grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:0 24px;}
+  }
+  @media(max-width:760px){
+    nav.links{display:none;}
+    .burger-toggle{display:flex;}
+    .nav-cta .btn span.long{display:none;}
+    .grid-items{grid-template-columns:1fr;}
+  }
+  @media(max-width:560px){
+    .feature-grid{grid-template-columns:1fr;}
+    .wrap{padding:0 16px;}
+    .hero{padding:32px 16px 30px;}
+    .menu-group h3{font-size:1.15rem;margin-bottom:12px;}
+    .item-card{padding:12px 0;}
+    .combo-card{padding:16px;}
+    .search-box input{font-size:16px;} /* Prevents iOS auto-zoom on input */
+    .cart-drawer{width:100%;}
+  }
+</style>
+</head>
+<body>
+
+<svg style="display:none">
+  <symbol id="i-cup" viewBox="0 0 24 24"><path d="M6 3h12l-1.2 15a3 3 0 0 1-3 2.8h-3.6a3 3 0 0 1-3-2.8L6 3z"/><path d="M9.5 9.5h5"/><path d="M14 3v-1.5"/></symbol>
+  <symbol id="i-citrus" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><path d="M12 3.5v17M3.5 12h17M6 6l12 12M18 6L6 18"/></symbol>
+  <symbol id="i-glass" viewBox="0 0 24 24"><path d="M7 3h10l-1 16a2 2 0 0 1-2 2H10a2 2 0 0 1-2-2L7 3z"/><path d="M7.7 10h8.6"/></symbol>
+  <symbol id="i-cocktail" viewBox="0 0 24 24"><path d="M5 4h14l-7 9-7-9z"/><path d="M12 13v7M8.5 20h7"/></symbol>
+  <symbol id="i-coffee" viewBox="0 0 24 24"><path d="M4 8h13v6a5 5 0 0 1-5 5H9a5 5 0 0 1-5-5V8z"/><path d="M17 9.5h1.5a2.5 2.5 0 0 1 0 5H17"/><path d="M8 3.5c0 1-1 1-1 2M12 3.5c0 1-1 1-1 2"/></symbol>
+  <symbol id="i-icecream" viewBox="0 0 24 24"><path d="M8 11a4 4 0 1 1 8 0z"/><path d="M9 11l3 10 3-10"/></symbol>
+  <symbol id="i-burger" viewBox="0 0 24 24"><path d="M4 10c0-3 3.5-6 8-6s8 3 8 6"/><path d="M3.5 11h17M4 14h16M5 17h14"/></symbol>
+  <symbol id="i-flame" viewBox="0 0 24 24"><path d="M12 2c2 3-3 5-3 9a5 5 0 0 0 10 0c0-2-1-3-1-3s.5 2-1 3c0-3-3-3-3-6-1 1-2 2-2-3z"/></symbol>
+  <symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></symbol>
+  <symbol id="i-pin" viewBox="0 0 24 24"><path d="M12 21s7-6.6 7-11.5A7 7 0 0 0 5 9.5C5 14.4 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/></symbol>
+  <symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.5 2"/></symbol>
+  <symbol id="i-phone" viewBox="0 0 24 24"><path d="M5 4h3.2l1.3 4-2 1.5a13 13 0 0 0 6 6l1.5-2 4 1.3V19a2 2 0 0 1-2 2C9.8 21 3 14.2 3 6a2 2 0 0 1 2-2z"/></symbol>
+  <symbol id="i-bike" viewBox="0 0 24 24"><circle cx="6" cy="17" r="3"/><circle cx="18" cy="17" r="3"/><path d="M6 17l3-7h5l3 7M9 10l-1.5-3H5M13 6h4l1 4"/></symbol>
+  <symbol id="i-star" viewBox="0 0 24 24"><path d="M12 3l2.6 5.6 6.1.6-4.6 4.2 1.3 6-5.4-3.1-5.4 3.1 1.3-6L3.3 9.2l6.1-.6z"/></symbol>
+  <symbol id="i-close" viewBox="0 0 24 24"><path d="M5 5l14 14M19 5L5 19"/></symbol>
+  <symbol id="i-menu" viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16"/></symbol>
+  <symbol id="i-whats" viewBox="0 0 24 24"><path d="M7 17l-2.5 1 1-2.5A8 8 0 1 1 7 17z"/><path d="M8.5 10.2c0 3 2.4 5.3 5.3 5.3.4-1 .4-1.5 0-1.8l-1.6-.8-1 1c-1-.5-1.9-1.4-2.4-2.4l1-1-.8-1.6c-.3-.4-.8-.4-1.8 0"/></symbol>
+</svg>
+
+<header>
+  <div class="navbar">
+    <div class="brand"><span class="dot"></span> Dessi Cuppa</div>
+    <nav class="links">
+      <a href="#menu">Menu</a>
+      <a href="#about">Why Us</a>
+      <a href="#reviews">Reviews</a>
+      <a href="#visit">Visit</a>
+    </nav>
+    <div class="nav-cta">
+      <a class="btn btn-outline" href="tel:+919645276666"><svg class="icon"><use href="#i-phone"/></svg><span class="long">Call</span></a>
+      <button class="btn btn-yellow" onclick="openCart()"><svg class="icon"><use href="#i-cup"/></svg> Order</button>
+      <button class="burger-toggle" onclick="toggleMobileNav()" aria-label="Menu"><svg class="icon"><use href="#i-menu"/></svg></button>
+    </div>
+  </div>
+  <div id="mobileNav" style="display:none;flex-direction:column;gap:14px;padding:10px 24px 22px;font-weight:600;">
+    <a href="#menu" onclick="toggleMobileNav()">Menu</a>
+    <a href="#about" onclick="toggleMobileNav()">Why Us</a>
+    <a href="#reviews" onclick="toggleMobileNav()">Reviews</a>
+    <a href="#visit" onclick="toggleMobileNav()">Visit</a>
+  </div>
+</header>
+
+<section class="hero">
+  <div>
+    <div class="eyebrow"><svg class="icon" style="width:14px;height:14px;stroke:var(--lime)"><use href="#i-pin"/></svg> PANNITHADAM · KUNNAMKULAM</div>
+    <h1>SIXTY SHAKES,<br>ONE QUEUE,<br><span>ZERO REGRETS.</span></h1>
+    <p class="lead">Mojitos that glow, milkshakes stacked with chocolate bars, and fried chicken that's broasted to order. Dessi Cuppa is Pannithadam's go-to stop for something cold, something fried, and something worth the wait.</p>
+    <div class="hero-ctas">
+      <a class="btn btn-yellow" href="#menu"><svg class="icon"><use href="#i-cup"/></svg> Browse the Menu</a>
+      <a class="btn btn-outline" href="https://wa.me/919645276666" target="_blank" rel="noopener"><svg class="icon"><use href="#i-whats"/></svg> Order on WhatsApp</a>
+    </div>
+    <div class="stat-row">
+      <div class="stat"><span class="num">4.0★</span><span class="lbl">343 Google Reviews</span></div>
+      <div class="stat"><span class="num">90+</span><span class="lbl">Drinks &amp; Shakes</span></div>
+      <div class="stat"><span class="num">10–10</span><span class="lbl">Open Daily</span></div>
+      <div class="stat"><span class="num">4km</span><span class="lbl">Free Delivery Radius</span></div>
+    </div>
+  </div>
+  <div class="cup-stage">
+    <div class="blob"></div>
+    <svg viewBox="0 0 280 340" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="liq1" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#ff3e7f"/>
+          <stop offset="100%" stop-color="#a4126b"/>
+        </linearGradient>
+        <linearGradient id="liq2" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#ffdd85"/>
+          <stop offset="100%" stop-color="#ffc93c"/>
+        </linearGradient>
+      </defs>
+      <ellipse cx="140" cy="310" rx="78" ry="14" fill="#000" opacity=".25"/>
+      <path d="M55 90 L225 90 L205 290 a30 30 0 0 1-30 27 H105 a30 30 0 0 1-30-27 Z" fill="#1c0537" stroke="#ffc93c" stroke-width="3"/>
+      <clipPath id="cupclip"><path d="M58 95 L222 95 L203 288 a26 26 0 0 1-26 24 H107 a26 26 0 0 1-26-24 Z"/></clipPath>
+      <g clip-path="url(#cupclip)">
+        <rect class="liquid" x="40" y="150" width="200" height="180" fill="url(#liq2)"/>
+        <rect class="liquid" x="40" y="190" width="200" height="140" fill="url(#liq1)" opacity=".85"/>
+        <circle class="bubble" cx="110" cy="260" r="5" fill="#fff" opacity=".5"/>
+        <circle class="bubble" cx="150" cy="280" r="4" fill="#fff" opacity=".4" style="animation-delay:1.2s"/>
+        <circle class="bubble" cx="180" cy="250" r="6" fill="#fff" opacity=".5" style="animation-delay:2.4s"/>
+        <circle class="bubble" cx="130" cy="300" r="3" fill="#fff" opacity=".4" style="animation-delay:3.4s"/>
+      </g>
+      <rect x="50" y="76" width="180" height="22" rx="11" fill="#ffc93c"/>
+      <rect x="150" y="14" width="13" height="100" rx="6" fill="#c6ff4d" transform="rotate(8 156 64)"/>
+      <circle cx="95" cy="60" r="3" fill="#fff" opacity=".6"/>
+      <circle cx="190" cy="180" r="3" fill="#fff" opacity=".5"/>
+      <circle cx="80" cy="230" r="2.4" fill="#fff" opacity=".5"/>
+    </svg>
+  </div>
+</section>
+
+<div class="marquee-strip">
+  <div class="marquee-track" id="marqueeTrack"></div>
+</div>
+
+<section id="menu">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="eyebrow">THE FULL BOARD</div>
+      <h2>Pick Your Poison</h2>
+      <p>Ninety milkshake names, seventeen mojitos and a fried-chicken bucket sized for a crowd. Tap a category, search a craving, and build your order below.</p>
+    </div>
+
+    <div class="menu-toolbar">
+      <div class="search-row">
+        <div class="search-box">
+          <svg class="icon"><use href="#i-search"/></svg>
+          <input id="searchInput" type="text" placeholder="Search the whole menu… try 'nutella' or 'pizza'" oninput="onSearch(this.value)">
+        </div>
+      </div>
+      <div class="tabs" id="tabBar"></div>
+    </div>
+
+    <div id="menuPanel"></div>
+  </div>
+</section>
+
+<section id="about" style="background:linear-gradient(180deg,transparent,rgba(255,255,255,.02));">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="eyebrow">WHY DESSI CUPPA</div>
+      <h2>Made Fresh, Served Fast</h2>
+      <p>No frozen shortcuts, no sad fries. Here's what keeps the queue moving and the regulars coming back.</p>
+    </div>
+    <div class="feature-grid">
+      <div class="feature-card">
+        <div class="icon-wrap"><svg class="icon"><use href="#i-citrus"/></svg></div>
+        <h4>Fruit Cut to Order</h4>
+        <p>Tender coconut, chikku, avocado and seasonal fruit are blended fresh per glass — never pre-mixed.</p>
+      </div>
+      <div class="feature-card">
+        <div class="icon-wrap"><svg class="icon"><use href="#i-flame"/></svg></div>
+        <h4>Broasted, Not Rushed</h4>
+        <p>Chicken buckets from 2 to 20 pieces, pressure-fried to order so the crowd-size box still comes out hot.</p>
+      </div>
+      <div class="feature-card">
+        <div class="icon-wrap"><svg class="icon"><use href="#i-bike"/></svg></div>
+        <h4>Free 4km Delivery</h4>
+        <p>One call to 96452 76666 gets the order moving — free delivery within four kilometres of Pannithadam.</p>
+      </div>
+      <div class="feature-card">
+        <div class="icon-wrap"><svg class="icon"><use href="#i-cup"/></svg></div>
+        <h4>Something for ₹1–200</h4>
+        <p>Most people walk out having spent under ₹200 a head — easy to make this a daily stop, not a treat.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="reviews">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="eyebrow">WORD ON THE STREET</div>
+      <h2>343 Reviews and Counting</h2>
+    </div>
+    <div class="rating-banner">
+      <span class="big">4.0</span>
+      <div>
+        <div class="stars">★★★★☆</div>
+        <div style="color:var(--cream-dim);font-size:.85rem;">Based on Google reviews</div>
+      </div>
+    </div>
+    <div class="review-grid">
+      <div class="review-card">
+        <div class="stars">★★★★★</div>
+        <p>Calls the drink menu a goldmine — over a hundred options spanning juices, mocktails, lassi and smoothies to pick from.</p>
+        <div class="reviewer"><div class="avatar">A</div><div class="who"><b>AKR Insights</b><span>Local Guide · 115 reviews</span></div></div>
+      </div>
+      <div class="review-card">
+        <div class="stars">★★★★★</div>
+        <p>A favourite hangout spot, with a fun lineup of items that make it an easy place to enjoy time with friends.</p>
+        <div class="reviewer"><div class="avatar">A</div><div class="who"><b>Arun Xavier</b><span>Local Guide · 104 reviews</span></div></div>
+      </div>
+      <div class="review-card">
+        <div class="stars">★★★★☆</div>
+        <p>Tried the Monster Shake and the Club Sandwich — liked the variety of shakes and quick bites, with decent portions for the price.</p>
+        <div class="reviewer"><div class="avatar">R</div><div class="who"><b>Rino Disney</b><span>Local Guide · 166 reviews</span></div></div>
+      </div>
+      <div class="review-card">
+        <div class="stars">★★★★★</div>
+        <p>The Chikku shake came up as a personal favourite — called out as good value for the price.</p>
+        <div class="reviewer"><div class="avatar">A</div><div class="who"><b>Adhith Maroky</b><span>Local Guide · 51 reviews</span></div></div>
+      </div>
+      <div class="review-card">
+        <div class="stars">★★★★★</div>
+        <p>Praised the service and the staff specifically, describing the food and overall visit as a great experience.</p>
+        <div class="reviewer"><div class="avatar">S</div><div class="who"><b>Shabeena T</b><span>6 reviews</span></div></div>
+      </div>
+      <div class="review-card">
+        <div class="stars">★★★★★</div>
+        <p>Sums it up simply: affordable food and drinks that still come through on quality.</p>
+        <div class="reviewer"><div class="avatar">H</div><div class="who"><b>Haveen Haridasan</b><span>Local Guide · 36 reviews</span></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="visit" style="background:linear-gradient(180deg,rgba(255,255,255,.02),transparent);">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="eyebrow">FIND US</div>
+      <h2>Visit, Call or Get It Delivered</h2>
+    </div>
+    <div class="visit-grid">
+      <div class="visit-card">
+        <h3>Hours &amp; Location</h3>
+        <div class="row-info">
+          <div class="icon-wrap"><svg class="icon"><use href="#i-pin"/></svg></div>
+          <div class="txt"><b>Pannithadam, Kerala 680604</b><span>Near Kunnamkulam, Thrissur district</span></div>
+        </div>
+        <div class="row-info">
+          <div class="icon-wrap"><svg class="icon"><use href="#i-clock"/></svg></div>
+          <div class="txt"><b>Open Daily · 10:00 AM – 10:00 PM</b><span>Same hours, every day of the week</span></div>
+        </div>
+        <div class="peak-note">⚡ Busiest around 6 PM, with waits up to 30 minutes. Most visits run about 15 minutes once seated.</div>
+        <div class="visit-actions">
+          <a class="btn btn-yellow" target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&query=Dessi+Cuppa+Pannithadam+Kerala+680604"><svg class="icon"><use href="#i-pin"/></svg> Get Directions</a>
+          <a class="btn btn-outline" href="tel:+919645276666"><svg class="icon"><use href="#i-phone"/></svg> 96452 76666</a>
+        </div>
+      </div>
+      <div class="visit-card">
+        <h3>Order &amp; Delivery</h3>
+        <div class="row-info">
+          <div class="icon-wrap"><svg class="icon"><use href="#i-bike"/></svg></div>
+          <div class="txt"><b>Free delivery within 4km</b><span>Call or WhatsApp to place a delivery order</span></div>
+        </div>
+        <div class="row-info">
+          <div class="icon-wrap"><svg class="icon"><use href="#i-whats"/></svg></div>
+          <div class="txt"><b>Build an order above, send it on WhatsApp</b><span>Use the cup button in the corner — it drafts the message for you</span></div>
+        </div>
+        <div class="row-info">
+          <div class="icon-wrap"><svg class="icon"><use href="#i-cup"/></svg></div>
+          <div class="txt"><b>Dine-in available</b><span>All-you-can-eat slots, happy-hour pricing and a private dining room on request</span></div>
+        </div>
+        <div class="social-row">
+          <a href="https://instagram.com/dessi_cuppa_pannithadam" target="_blank" rel="noopener" aria-label="Instagram"><svg class="icon"><use href="#i-citrus"/></svg></a>
+          <a href="https://www.facebook.com/p/Dessi-Cuppa-Pannithadam" target="_blank" rel="noopener" aria-label="Facebook"><svg class="icon"><use href="#i-glass"/></svg></a>
+          <a href="tel:+919645276666" aria-label="Call"><svg class="icon"><use href="#i-phone"/></svg></a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div class="foot-grid">
+      <div>
+        <div class="brand" style="font-size:1.1rem;"><span class="dot"></span> Dessi Cuppa</div>
+        <p>Pannithadam's spot for shakes, mojitos, falooda, burgers, pizza and broasted chicken — open 10 AM to 10 PM, every day.</p>
+      </div>
+      <div class="foot-col">
+        <h5>Explore</h5>
+        <a href="#menu">Full Menu</a>
+        <a href="#about">Why Us</a>
+        <a href="#reviews">Reviews</a>
+        <a href="#visit">Visit Us</a>
+      </div>
+      <div class="foot-col">
+        <h5>Contact</h5>
+        <a href="tel:+919645276666">96452 76666</a>
+        <a href="https://wa.me/919645276666" target="_blank" rel="noopener">WhatsApp Order</a>
+        <a href="https://www.google.com/maps/search/?api=1&query=Dessi+Cuppa+Pannithadam+Kerala+680604" target="_blank" rel="noopener">Pannithadam, Kerala 680604</a>
+      </div>
+    </div>
+    <div class="foot-bottom">
+      <span>© 2026 Dessi Cuppa, Pannithadam. Menu &amp; prices sourced from the in-store board — please confirm at checkout.</span>
+      <span>Built for the love of milkshakes 🥤</span>
+    </div>
+  </div>
+</footer>
+
+<button class="cart-fab" onclick="openCart()" aria-label="View order">
+  <svg class="icon" style="width:26px;height:26px;stroke-width:1.6"><use href="#i-cup"/></svg>
+  <span class="badge" id="cartBadge" style="display:none;">0</span>
+</button>
+
+<div class="cart-overlay" id="cartOverlay" onclick="closeCart()"></div>
+<div class="cart-drawer" id="cartDrawer">
+  <div class="cart-head">
+    <h3>Your Order</h3>
+    <button class="cart-close" onclick="closeCart()"><svg class="icon" style="width:16px;height:16px"><use href="#i-close"/></svg></button>
+  </div>
+  <div class="cart-body" id="cartBody"></div>
+  <div class="cart-foot">
+    <div class="cart-total"><span>Total</span><span id="cartTotal">₹0</span></div>
+    <a class="btn btn-yellow" id="waOrderBtn" target="_blank" rel="noopener" href="#"><svg class="icon"><use href="#i-whats"/></svg> Order on WhatsApp</a>
+    <a class="btn btn-outline" href="tel:+919645276666"><svg class="icon"><use href="#i-phone"/></svg> Or Call to Order</a>
+    <a class="clear-link" onclick="clearCart()">Clear order</a>
+  </div>
+</div>
+
+<script>
+/* ============ MENU DATA ============ */
+const MENU = [
+  {id:'shakes', label:'Milkshakes', icon:'i-cup', groups:[
+    {h:'Classic Milkshakes', items:[
+      ['Pineapple Shake',70],['Guava Shake',70],['Verry Berry Strawberry',70],
+      ['Mango Alphonso',80],
+      ['Ferrero Rocher',90],['Oreo Shake',90],['Saudi Shake',90],['Belgian Chocolate',90],['Mango Strawberry',90],['Pista Shake',90],
+      ['Walk Like An Egyptian',100],['Belgian Chips',100],['Passion Fruit',100],['Butter Scotch',100],['Oreo Blast',100],['Boost',100],['Horlicks',100],
+      ['Biscoff Shake',110],['Banana Passion Fruit',110],['Oreo Crumble',110],['Banana Chocolate',110],['Snickers Shake',110],['Dairy Milk Shake',110],['Kitkat Shake',110],
+      ['Mississippi Mud',120],['Nutella Shake',120],['Kitkat Banana',120],['Dairy Milk Banana',120],['White Chocolate',120],['Biscoff Banana',120],
+      ['Biscoff Mud',130],
+      ['Red Velvet Shake',140],['Black Forest Shake',140],['White Forest',140],['Purple Velvet',140],['Coffee Velvet',140],['Snickers Mud',140],['Monster Shake',140],
+      ['Nutella Banana',150],['Dairy Milk Mud',150],['Kitkat Mud',150],
+      ['Nutella Mud',160]
+    ]}
+  ]},
+  {id:'fruitshakes', label:'Fruit & Specialty Shakes', icon:'i-citrus', groups:[
+    {h:'Fresh Fruit Milkshakes', items:[['Sharjan',70],['Tender Coconut',80],['Mango',80],['Sharjan Special',80],['Custard Apple',80],['Shamam',80],['Chikku',80],['Apple',100],['Avocado',100],['Strawberry',100],['Dry Fruit Shake',100],['Fig',100]]},
+    {h:'Mixed Fruit Shakes', items:[['Tender Mango',120],['Tender Banana',120],['Tender Snickers',120],['Tender Kitkat',120],['Tender Avocado',120],['Tender Strawberry',120],['Tender Chikku',120],['Tender Dry Fruit',120],['Avocado Dry Fruit',120]]},
+    {h:'Avil (Beaten Rice) Milk', items:[['Avil Milk',60],['Badam Avil Milk',70],['Chocolate Avil Milk',70],['Mango Avil Milk',80],['Tender Avil Milk',80],['Chikku Avil Milk',80],['Dry Fruit Avil Milk',120]]},
+    {h:'Nuts & Dry Fruit Shakes', items:[['Badam Shake',160],['Cashew & Fig',160],['Cashew & Dates',160],['Dates & Badam',160],['Fig & Badam',160],['Fig & Dates',160]]}
+  ]},
+  {id:'juices', label:'Juices, Lime & Lassi', icon:'i-glass', groups:[
+    {h:'Fresh Lime', items:[['Fresh Lime',70],['Mint Lime',70],['Ginger Lime',70],['Sweet & Salt Lime',70],['Pineapple Lime',70],['Grape Lime',70],['Strawberry Lime',80]]},
+    {h:'Fresh Juice', items:[['Orange',70],['Water Melon',70],['Pineapple',70],['Cucumber Lemonade',70],['Mango',70],['Shamam',70],['Papaya',70],['Grape',70],['Musambi',80],['Anar (Pomegranate)',120],['Apple',120],['Strawberry',120]]},
+    {h:'Lassi', items:[['Sweet Lassi',60],['Banana Lassi',70],['Mango Lassi',70],['Fruit Lassi',90],['Dry Fruit Lassi',120]]},
+    {h:'Krushers', items:[['Red Lime Krusher',90],['Blue Lime Krusher',90],['Green Apple Krusher',90],['Passion Fruit Krusher',90],['Water Melon Krusher',90]]}
+  ]},
+  {id:'mojito', label:'Mojito & Falooda', icon:'i-cocktail', groups:[
+    {h:'Mojito — every flavour ₹80', items:[['Pina Colada',80],['Mango',80],['Anar',80],['Mint',80],['Butterscotch',80],['Rose',80],['Red Chilli',80],['Red Strawberry',80],['Bleed Blue',80],['Green Apple',80],['Passion Fruit',80],['Kiwi',80],['Water Melon',80],['Grape',80],['Peach Mojito',80],['Black Currant Mojito',80],['Lime & Mint Mojito',80]]},
+    {h:'Falooda', items:[['Regular Falooda',90],['Fruit Falooda',130],['Mango Falooda',130],['Crown Falooda',160],['Dessi Cuppa Falooda',160],['Tender Falooda',160],['Chocolate Falooda',160],['Dry Fruit Falooda',180],['Royal Falooda',180]]},
+    {h:'Nuts with Ice Cream', items:[['Nuts Ice Cream',150],['Nuts & Fruits',150]]}
+  ]},
+  {id:'hot', label:'Hot Beverages & Cold Coffee', icon:'i-coffee', groups:[
+    {h:'Hot', items:[['Black Tea',10],['Mint Tea',15],['Lemon Tea',15],['Lemon Mint Tea',15],['Ginger Tea',15],['Tea',20],['Hot Milk',25],['Coffee',25],['Horlicks',25],['Boost',50],['Badam Milk',60],['Hot Chocolate Coffee',60]]},
+    {h:'Cold Coffee', items:[['Hard Rock Coffee',90],['Mud Coffee',120],['Chocolate Coffee',120]]}
+  ]},
+  {id:'sundaes', label:'Sundaes, Smoothies & More', icon:'i-icecream', groups:[
+    {h:'With Ice Cream', items:[['Fruit Salad',100],['Brownie with Ice Cream',100],['Death by Chocolate',120],['Dry Fruit Sundae',140],['Puttu Ice Cream',220]]},
+    {h:'Smoothies', items:[['Strawberry Banana',140],['Mango Banana',140],['Pineapple Mango',140],['Mango Strawberry',140],['Pineapple Banana',140]]},
+    {h:'Malba', items:[['Banana Malba',150],['Strawberry Malba',150],['Mango Malba',150],['Tender Malba',150],['Chikku Malba',150],['Avocado Malba',150]]},
+    {h:'Protein Shakes', items:[['Whey Protein',120],['Avocado with Protein',100]]}
+  ]},
+  {id:'food1', label:'Burgers, Sandwiches & Pizza', icon:'i-burger', groups:[
+    {h:'Burgers', items:[['Chicken Classic',90],['Veg Burger',110],['Mexican Burger',110],['Egg Burger',120],['Nuggets Burger',130],['Beef Burger',130],['Peri Peri Burger',140],['Italian Chicken Burger',150],['Zingar Burger',150],['Peri Peri Beef Burger',150],['Dessi Cuppa Chicken Burger',180],['Jumbo Burger',180]], addon:['Extra Cheese',20]},
+    {h:'Sandwiches', items:[['Veg Sandwich',30],['Egg Sandwich',40],['Cheezy Sandwich',40],['Chicken Sandwich',120],['Nuggets Sandwich',120],['Grill Sandwich',120],['Dessi Cuppa Sandwich',120],['Beef Sandwich',130],['Kabab Sandwich',130],['Beef Grill Sandwich',140],['Club Sandwich',140]]},
+    {h:'Pizza', items:[['Veg Lovers',250],['Chicken Classic Pizza',270],['BBQ Chicken Pizza',300],['Beef Lovers Pizza',300],['Paneer Pizza',300],['Kebab Pizza',300],['Sausage Pizza',300],['Peri Peri Chicken Pizza',330],['Meat Lovers Pizza',330],['Peri Peri Beef Pizza',330]], addon:['Extra Cheese',50]},
+    {h:'Roll Wraps', items:[['Egg Roll',80],['Chicken Roll',100],['Paneer Roll',100],['Egg Cheese Roll',100],['Beef Roll',120]]}
+  ]},
+  {id:'fried', label:'Fries, Snacks & Fried Chicken', icon:'i-flame', groups:[
+    {h:'Fries & Sides', items:[
+      ['French Fries (Reg / Med / Large)','60 / 90 / 110'],
+      ['Masala Fries (Reg / Large)','60 / 120'],
+      ['Crinkle Fries (Reg / Large)','80 / 150'],
+      ['Chicken Loaded Fries',220],
+      ['Potato Wedges',120],
+      ['Chicken Nuggets (6 pcs)',120],
+      ['Chicken Balls (15 pcs)',120],
+      ['Chicken Garlic Finger (6 pcs)',120],
+      ['Peri Peri Fries (Reg / Med / Large)','70 / 100 / 180'],
+      ['Smileys (8 pcs)',120],
+      ['Aloo Tikka (6 pcs)',120],
+      ['Veg Fingers (6 pcs)',120],
+      ['Cheese Loaded Fries (Reg / Large)','100 / 200']
+    ]},
+    {h:'Fried Chicken Combos', combo:true, items:[
+      {n:'Snack Box',p:220,d:'2 pcs chicken, 1 bun, french fries &amp; garlic paste'},
+      {n:'Dinner Box',p:399,d:'4 pcs chicken, fries, 2 buns, 2 garlic paste, coleslaw'},
+      {n:'Family Special',p:599,d:'6 pcs chicken, fries, 3 buns, large garlic paste, coleslaw'},
+      {n:'Family Pack',p:789,d:'8 pcs chicken, fries, 4 buns, large garlic paste, coleslaw'},
+      {n:'Chicken Strips',p:270,d:'6 pcs crispy chicken strips'},
+      {n:'Royal Box',p:999,d:'12 pcs chicken, small fries, 6 buns, large garlic paste, 2 coleslaw'},
+      {n:'Party Box',p:1299,d:'16 pcs chicken, large fries, 8 buns, 2 large garlic paste, 2 coleslaw'}
+    ], addon:['Add-on Spicy',30]},
+    {h:'Broasted Chicken Bucket', items:[['2 Pcs Bucket',220],['4 Pcs Bucket',399],['6 Pcs Bucket',599],['8 Pcs Bucket',789],['10 Pcs Bucket',899],['12 Pcs Bucket',999],['14 Pcs Bucket',1159],['16 Pcs Bucket',1299],['18 Pcs Bucket',1399],['20 Pcs Bucket',1499]]}
+  ]}
+];
+
+/* ============ STATE ============ */
+let activeTab = MENU[0].id;
+const registry = {};   // id -> {name, price(number)}
+const cart = {};       // id -> qty
+let idCounter = 0;
+
+/* ============ RENDER: TABS ============ */
+const tabBar = document.getElementById('tabBar');
+MENU.forEach(cat=>{
+  const b = document.createElement('button');
+  b.className = 'tab' + (cat.id===activeTab ? ' active' : '');
+  b.dataset.cat = cat.id;
+  b.innerHTML = `<svg class="icon" style="width:15px;height:15px"><use href="#${cat.icon}"/></svg> ${cat.label}`;
+  b.onclick = ()=>{ document.getElementById('searchInput').value=''; setActiveTab(cat.id); };
+  tabBar.appendChild(b);
+});
+
+function setActiveTab(id){
+  activeTab = id;
+  document.querySelectorAll('.tab').forEach(t=>t.classList.toggle('active', t.dataset.cat===id));
+  renderTab(id);
+}
+
+function priceLabel(p){
+  return (typeof p === 'number') ? '₹'+p : '₹'+p;
+}
+function firstNumeric(p){
+  if(typeof p === 'number') return p;
+  const m = String(p).match(/\d+/);
+  return m ? parseInt(m[0],10) : 0;
+}
+
+function makeItemCard(name, price){
+  const id = 'it'+(idCounter++);
+  registry[id] = {name, price: firstNumeric(price)};
+  const card = document.createElement('div');
+  card.className = 'item-card fade-up';
+  card.innerHTML = `
+    <span class="name">${name}</span>
+    <span class="right">
+      <span class="price mono">${priceLabel(price)}</span>
+      <button class="add" aria-label="Add ${name} to order" onclick="addToCart('${id}')">+</button>
+    </span>`;
+  return card;
+}
+
+function makeComboCard(combo){
+  const id = 'it'+(idCounter++);
+  registry[id] = {name: combo.n, price: combo.p};
+  const card = document.createElement('div');
+  card.className = 'combo-card fade-up';
+  card.innerHTML = `
+    <div class="top">
+      <span class="name">${combo.n}</span>
+      <button class="add" aria-label="Add ${combo.n} to order" onclick="addToCart('${id}')">+</button>
+    </div>
+    <p class="desc">${combo.d}</p>
+    <div class="bottom"><span class="price mono">₹${combo.p}</span></div>`;
+  return card;
+}
+
+function renderTab(catId){
+  const cat = MENU.find(c=>c.id===catId);
+  const panel = document.getElementById('menuPanel');
+  panel.innerHTML = '';
+  cat.groups.forEach(g=>{
+    const wrap = document.createElement('div');
+    wrap.className = 'menu-group';
+    const h = document.createElement('h3');
+    h.textContent = g.h;
+    wrap.appendChild(h);
+    const grid = document.createElement('div');
+    grid.className = 'grid-items';
+    g.items.forEach(it=>{
+      if(g.combo){ grid.appendChild(makeComboCard(it)); }
+      else { grid.appendChild(makeItemCard(it[0], it[1])); }
+    });
+    wrap.appendChild(grid);
+    if(g.addon){
+      const note = document.createElement('div');
+      note.className = 'addon-note';
+      note.textContent = `+ ${g.addon[0]} available — add ₹${g.addon[1]}`;
+      wrap.appendChild(note);
+    }
+    panel.appendChild(wrap);
+  });
+  observeFades();
+}
+
+function renderSearch(query){
+  const q = query.trim().toLowerCase();
+  const panel = document.getElementById('menuPanel');
+  panel.innerHTML = '';
+  let matches = [];
+  MENU.forEach(cat=>{
+    cat.groups.forEach(g=>{
+      g.items.forEach(it=>{
+        const name = g.combo ? it.n : it[0];
+        if(name.toLowerCase().includes(q)) matches.push({catLabel:cat.label, groupLabel:g.h, it, combo:g.combo});
+      });
+    });
+  });
+  if(matches.length===0){
+    panel.innerHTML = `<div class="no-results">No items match “${query}” — try another flavour, or browse a category above.</div>`;
+    return;
+  }
+  const wrap = document.createElement('div');
+  wrap.className = 'menu-group';
+  const h = document.createElement('h3');
+  h.textContent = `${matches.length} result${matches.length>1?'s':''} for “${query}”`;
+  wrap.appendChild(h);
+  const grid = document.createElement('div');
+  grid.className = 'grid-items';
+  matches.forEach(m=>{
+    grid.appendChild(m.combo ? makeComboCard(m.it) : makeItemCard(m.it[0], m.it[1]));
+  });
+  wrap.appendChild(grid);
+  panel.appendChild(wrap);
+  observeFades();
+}
+
+function onSearch(v){
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  if(v.trim().length>0){ renderSearch(v); }
+  else {
+    document.querySelectorAll('.tab').forEach(t=>t.classList.toggle('active', t.dataset.cat===activeTab));
+    renderTab(activeTab);
+  }
+}
+
+/* ============ MARQUEE ============ */
+const marqueeNames = MENU.map(c=>c.label.toUpperCase());
+const track = document.getElementById('marqueeTrack');
+for(let i=0;i<2;i++){
+  marqueeNames.forEach(n=>{
+    const s = document.createElement('span');
+    s.textContent = n;
+    track.appendChild(s);
+  });
+}
+
+/* ============ CART ============ */
+function addToCart(id){
+  cart[id] = (cart[id]||0) + 1;
+  renderCart();
+  const fab = document.querySelector('.cart-fab');
+  fab.style.transform = 'scale(1.15)';
+  setTimeout(()=>fab.style.transform='', 180);
+}
+function changeQty(id, delta){
+  cart[id] = (cart[id]||0) + delta;
+  if(cart[id]<=0) delete cart[id];
+  renderCart();
+}
+function clearCart(){
+  Object.keys(cart).forEach(k=>delete cart[k]);
+  renderCart();
+}
+function renderCart(){
+  const body = document.getElementById('cartBody');
+  const ids = Object.keys(cart);
+  let total = 0;
+  if(ids.length===0){
+    body.innerHTML = `<div class="cart-empty">Your order's empty.<br>Tap any “+” on the menu to start building it.</div>`;
+  } else {
+    body.innerHTML = '';
+    ids.forEach(id=>{
+      const item = registry[id];
+      const qty = cart[id];
+      total += item.price*qty;
+      const row = document.createElement('div');
+      row.className = 'cart-row';
+      row.innerHTML = `
+        <div><div class="nm">${item.name}</div><div class="pr">₹${item.price} each</div></div>
+        <div class="qty-ctrl">
+          <button onclick="changeQty('${id}',-1)">−</button>
+          <span class="mono">${qty}</span>
+          <button onclick="changeQty('${id}',1)">+</button>
+        </div>`;
+      body.appendChild(row);
+    });
+  }
+  document.getElementById('cartTotal').textContent = '₹'+total;
+  const badge = document.getElementById('cartBadge');
+  const count = ids.reduce((a,id)=>a+cart[id],0);
+  badge.style.display = count>0 ? 'flex' : 'none';
+  badge.textContent = count;
+
+  let msg = "Hi Dessi Cuppa! I'd like to order:\n";
+  if(ids.length===0){ msg += "(browsing the menu)\n"; }
+  ids.forEach(id=>{
+    const item = registry[id];
+    msg += `• ${cart[id]} x ${item.name} — ₹${item.price*cart[id]}\n`;
+  });
+  msg += `Total: ₹${total}\nDelivery / pickup: `;
+  document.getElementById('waOrderBtn').href = 'https://wa.me/919645276666?text=' + encodeURIComponent(msg);
+}
+function openCart(){
+  document.getElementById('cartDrawer').classList.add('open');
+  document.getElementById('cartOverlay').classList.add('open');
+}
+function closeCart(){
+  document.getElementById('cartDrawer').classList.remove('open');
+  document.getElementById('cartOverlay').classList.remove('open');
+}
+
+/* ============ MOBILE NAV ============ */
+function toggleMobileNav(){
+  const m = document.getElementById('mobileNav');
+  m.style.display = (m.style.display==='none' || !m.style.display) ? 'flex' : 'none';
+}
+
+/* ============ FADE-UP OBSERVER ============ */
+let fadeObserver;
+function observeFades(){
+  if(!fadeObserver){
+    fadeObserver = new IntersectionObserver(entries=>{
+      entries.forEach(e=>{ if(e.isIntersecting){ e.target.classList.add('in'); fadeObserver.unobserve(e.target); } });
+    }, {threshold:.1});
+  }
+  document.querySelectorAll('.fade-up:not(.in)').forEach(el=>fadeObserver.observe(el));
+}
+
+// Initialize
+renderTab(activeTab);
+renderCart();
+observeFades();
+</script>
+</body>
+</html>
